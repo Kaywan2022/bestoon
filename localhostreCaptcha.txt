@@ -1,0 +1,10 @@
+site key= 6LcOKqQjAAAAAGSCbvuFmksk98qiyKgMvA201-m7
+secret key= 6LcOKqQjAAAAAPRalKUnNyQl4egeyEDFeM3v_ZHN
+
+reCahptcha V 2.0
+site key =6Ld1ca8jAAAAAODZLgnLRmSmgKTDqjMtFM4Z_LYT
+secret key=6Ld1ca8jAAAAABw_G1jZbU6K4xCErgTvyN7gdyoJ
+
+localhost reCaptcha v2.0
+site key= 6LdRcq8jAAAAAHk0Wq-Z8Z4PXDezSaTKzopvvJG9
+secret key= 6LdRcq8jAAAAAMx4rqRrYZEgFIKD7elkFP521V2S
