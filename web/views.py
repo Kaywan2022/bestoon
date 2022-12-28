@@ -18,30 +18,6 @@ from django.conf import settings
 # Create your views here.
 
 
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
-
-
-def grecaptcha_verify(request):
-    # logger.debug("def grecaptcha_verify: " + format(request.POST))
-    data = request.POST
-    captcha_rs = data.get('g-recaptcha-response')
-    url = "https://www.google.com/recaptcha/api/siteverify"
-    params = {
-        'secret': settings.RECAPTCHA_SECRET_KEY,
-        'response': captcha_rs,
-        'remoteip': get_client_ip(request)
-    }
-    verify_rs = requests.get(url, params=params, verify=True)
-    verify_rs = verify_rs.json()
-    return verify_rs.get("success", False)
-
-
 
 @csrf_exempt
 def submit_income(request):
@@ -77,6 +53,29 @@ def submit_expense(request):
     }, encoder=JSONEncoder)
 
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+def grecaptcha_verify(request):
+    # logger.debug("def grecaptcha_verify: " + format(request.POST))
+    data = request.POST
+    captcha_rs = data.get('g-recaptcha-response')
+    url = "https://www.google.com/recaptcha/api/siteverify"
+    params = {
+        'secret': settings.RECAPTCHA_SECRET_KEY,
+        'response': captcha_rs,
+        'remoteip': get_client_ip(request)
+    }
+    verify_rs = requests.get(url, params=params, verify=True)
+    verify_rs = verify_rs.json()
+    return verify_rs.get("success", False)
+
 random_str = lambda N: ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(N))
 
 def register(request):
@@ -102,21 +101,21 @@ def register(request):
                 temporarycode = Passwordresetcodes(
                     email=email, time=now, code=code, username=username, password=password)
                 temporarycode.save()
-                message = PMMail(api_key=settings.POSTMARK_API_TOKEN,
-                                subject="فعالسازی اکانت بستون",
-                                sender="kay.van2015@k1bestoon.com",
-                                to=email,
-                                text_body=" برای فعال کردن اکانت بستون خود روی لینک روبرو کلیک کنید: {}?email={}&code".format(
-                                    request.build_absolute_uri('/accounts/register/'), email, code),
-                                tag="account request")
-                message.send()
+                # message = PMMail(api_key=settings.POSTMARK_API_TOKEN,
+                #                 subject="فعالسازی اکانت بستون",
+                #                 sender="kay.van2015@k1bestoon.com",
+                #                 to=email,
+                #                 text_body=" برای فعال کردن اکانت بستون خود روی لینک روبرو کلیک کنید: {}?email={}&code".format(
+                #                     request.build_absolute_uri('/accounts/register/'), email, code),
+                #                 tag="account request")
+                # message.send()
                 context = 'ایمیلی حاوی لینک فعال سازی اکانت به شما فرستاده شده، لطفا پس از چک کردن ایمیل، روی لینک کلیک کنید.'
-                # message = 'قدیم ها ایمیل فعال سازی می فرستادیم ولی الان شرکتش ما رو تحریم کرده (: پس راحت و بی دردسر'
-                # body = " برای فعال کردن اکانت بستون خود روی لینک روبرو کلیک کنید: <a href=\"{}?code={}\">لینک رو به رو</a> ".format(request.build_absolute_uri('/accounts/register/'), code)
-                # message = message + body
-                # context = {
-                #     'message': message }
-                return render(request, 'index.html', context)
+                message = 'قدیم ها ایمیل فعال سازی می فرستادیم ولی الان شرکتش ما رو تحریم کرده (: پس راحت و بی دردسر'
+                body = "<a href=\{}?code={}&email={}\"></a> ".format(request.build_absolute_uri('/accounts/register/'), code, email)
+                message = message + body
+                context = {
+                    'message': message }
+                return render(request, 'register.html', context)
         
             else:
                 context = {'message': 'متاسفانه این نام کاربری قبلا استفاده شده است. از نام کاربری دیگری استفاده کنید. ببخشید که فرم ذخیره نشده. درست می شه'} #TODO: forgot password
