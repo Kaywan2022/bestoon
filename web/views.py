@@ -106,8 +106,8 @@ def register(request):
                                 subject="فعالسازی اکانت بستون",
                                 sender="kay.van2015@k1bestoon.com",
                                 to=email,
-                                text_body=" برای فعال کردن اکانت بستون خود روی لینک روبرو کلیک کنید: {}?code={}".format(
-                                    request.build_absolute_uri('/accounts/register/'), code),
+                                text_body=" برای فعال کردن اکانت بستون خود روی لینک روبرو کلیک کنید: {}?email={}&code".format(
+                                    request.build_absolute_uri('/accounts/register/'), email, code),
                                 tag="account request")
                 message.send()
                 context = 'ایمیلی حاوی لینک فعال سازی اکانت به شما فرستاده شده، لطفا پس از چک کردن ایمیل، روی لینک کلیک کنید.'
