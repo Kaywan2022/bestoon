@@ -45,7 +45,8 @@
                     </button>
 
                     <a class="navbar-brand" href="http://todoer.ir">
-			                <img src="/static/todoer.png" >
+			                {% comment %} <img src="/static/todoer.png" > {% endcomment %}
+                      بستون
                     </a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -68,7 +69,7 @@
 
         <!-- Page Content -->
         <div class="container">
-            <h1>بستون</h1>
+            <h1></h1>
                   {% block content %}
 
 
@@ -82,14 +83,14 @@
             <div class="">
 
               <p>
-                <strong>تودوئر</strong> یک پروژهٔ آزاد و متن‌باز است.<br>
-			<a href="https://github.com/jadijadi/todoer">مخزن گیت‌هاب پروژه</a> |
+                <strong>بستون</strong> یک پروژهٔ آزاد و متن‌باز است.<br>
+			<a href="https://github.com/Kaywan2022/bestoon">مخزن گیت‌هاب پروژه</a> |
 			<a href="http://gapper.ir/channel/todoer">گزارش مشکلات و پیشنهادها</a>
               </p>
               <p>
-                <a href="/static/todoer_release.apk">
+                {% comment %} <a href="/static/todoer_release.apk">
                   دریافت اپ اندروید تودوئر
-                </a>
+                </a> {% endcomment %}
             </div>
           </div>
         </footer>

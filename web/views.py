@@ -145,4 +145,7 @@ def register(request):
             return render(request, 'register.html', context)
         
 
-        
+
+def index(request):
+    context = {}
+    return render(request, 'index.html', context)
