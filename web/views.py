@@ -14,6 +14,7 @@ from django.contrib.auth.hashers import make_password
 from postmark import PMMail
 from django.shortcuts import redirect
 from django.conf import settings
+from django.db.models import Sum, Count
 
 # Create your views here.
 
@@ -24,6 +25,7 @@ def submit_income(request):
     """user submit an expense"""
 
     #TODO: validate data.user mybe fake, token mybe fake,user mybe....  
+    #TODO:is the token valid
     this_token = request.POST['token']
     this_user = User.objects.filter(token__token = this_token).get()
     if 'date' not in request.POST:
@@ -42,6 +44,7 @@ def submit_expense(request):
     """user submit an expense"""
 
     #TODO: validate data.user mybe fake, token mybe fake,user mybe....  
+    #TODO:is the token valid
     this_token = request.POST['token']
     this_user = User.objects.filter(token__token = this_token).get()
     if 'date' not in request.POST:
@@ -111,7 +114,7 @@ def register(request):
                 # message.send()
                 context = 'ایمیلی حاوی لینک فعال سازی اکانت به شما فرستاده شده، لطفا پس از چک کردن ایمیل، روی لینک کلیک کنید.'
                 message = 'قدیم ها ایمیل فعال سازی می فرستادیم ولی الان شرکتش ما رو تحریم کرده (: پس راحت و بی دردسر'
-                body = "<a href=\{}?code={}&email={}\"></a> ".format(request.build_absolute_uri('/accounts/register/'), code, email)
+                body = "{}?email={}&code={}\"".format(request.build_absolute_uri('/accounts/register/'), email, code)
                 message = message + body
                 context = {
                     'message': message }
@@ -148,3 +151,20 @@ def register(request):
 def index(request):
     context = {}
     return render(request, 'index.html', context)
+
+
+
+
+@csrf_exempt
+def generalstat(request):
+    #TODO: should get a valid duration(from-to), if not,use 1 month
+    #TODO:is the token valid
+    this_token = request.POST['token']
+    this_user = User.objects.filter(token__token = this_token).get()
+    income =Income.objects.filter(user = this_user).aggregate(Count('amount'), Sum('amount'))
+    expense =Expense.objects.filter(user = this_user).aggregate(Count('amount'), Sum('amount'))
+    context = {}
+
+    context['expense']= expense
+    context['income']= income
+    return JsonResponse(context, encoder=JSONEncoder)
